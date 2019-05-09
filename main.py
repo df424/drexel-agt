@@ -1,6 +1,7 @@
 
 import argparse
 import rps as rps
+import prisoner as pris
 import numpy as np
 import simple_two_player as stpg
 import matplotlib.pyplot as plt
@@ -23,15 +24,35 @@ def rock_paper_scissors(args):
 
         policy_plots[i,0:3] = agent1.policy
         policy_plots[i,3:6] = agent2.policy
-        #policy_plots[i,0:3] = agent1.getNormalizedPolicy()
-        #policy_plots[i,3:6] = agent2.getNormalizedPolicy()
 
     plt.plot(policy_plots[:]) 
     plt.legend(['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors'])
     plt.show()
 
+def prisoners_dilema(args):
+    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(2)*2-1)
+    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(2)*2-1)
+    game = stpg.EpisodicGame([agent1, agent2], pris.PAYOUT_MATRIX)
+
+    policy_plots = np.zeros((args.n_iterations,4))
+
+    for i in range(args.n_iterations):
+        #update the game
+        results = game.update()
+
+        # print if verbosity is on.
+        if(args.verbose):
+            print(i, agent1.policy, agent1.getNormalizedPolicy(), agent2.policy, agent2.getNormalizedPolicy(), results)
+
+        policy_plots[i,0:2] = agent1.policy
+        policy_plots[i,2:4] = agent2.policy
+
+    plt.plot(policy_plots[:]) 
+    plt.legend(['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'])
+    plt.show()
+
 if __name__ == '__main__':
-    COMMAND_MAP = {'rps':rock_paper_scissors}
+    COMMAND_MAP = {'rps':rock_paper_scissors, 'prisoner':prisoners_dilema}
 
     parser = argparse.ArgumentParser(description="Play multiagent games")
     parser.add_argument('game', default='rps', choices=COMMAND_MAP.keys(), help="You must pass one of the following games to run: " + str(COMMAND_MAP.keys()))
