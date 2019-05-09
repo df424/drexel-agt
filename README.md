@@ -12,7 +12,7 @@ The goal of this project is to explore multiagent interaction in the context of 
 </ol>
 
 <h2>Environment Setup</h2>
-Run the following commands to install the required packages.
-<code>sudo pip install numpy</code>
-<code>sudo pip install matplotlib</code>
-<code>sudo pip install argparse</code>
+Run the following commands to install the required packages.</br>
+<code>sudo pip install numpy</code></br>
+<code>sudo pip install matplotlib</code></br>
+<code>sudo pip install argparse</code></br>
