@@ -6,6 +6,7 @@ import numpy as np
 import simple_two_player as stpg
 import matplotlib.pyplot as plt
 from optimizers import PolcyIncrementOptimizer
+from scipy.special import softmax
 
 def rock_paper_scissors(args):
     agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(3)*2-1)
@@ -20,10 +21,10 @@ def rock_paper_scissors(args):
 
         # print if verbosity is on.
         if(args.verbose):
-            print(i, agent1.policy, agent1.getNormalizedPolicy(), agent2.policy, agent2.getNormalizedPolicy(), results)
+            print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
-        policy_plots[i,0:3] = agent1.policy
-        policy_plots[i,3:6] = agent2.policy
+        policy_plots[i,0:3] = softmax(agent1.policy)
+        policy_plots[i,3:6] = softmax(agent2.policy)
 
     plt.plot(policy_plots[:]) 
     plt.legend(['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors'])
@@ -42,10 +43,10 @@ def prisoners_dilema(args):
 
         # print if verbosity is on.
         if(args.verbose):
-            print(i, agent1.policy, agent1.getNormalizedPolicy(), agent2.policy, agent2.getNormalizedPolicy(), results)
+            print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
-        policy_plots[i,0:2] = agent1.policy
-        policy_plots[i,2:4] = agent2.policy
+        policy_plots[i,0:2] = softmax(agent1.policy)
+        policy_plots[i,2:4] = softmax(agent2.policy)
 
     plt.plot(policy_plots[:]) 
     plt.legend(['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'])

@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import softmax
 
 # Rock-paper-scissors game and agent implementation
 class VectorPolicyAgent(object):
@@ -15,19 +16,12 @@ class VectorPolicyAgent(object):
         if off_policy:
             self.random_policy = np.ones(len(self.policy))/len(self.policy)
     
-    def getNormalizedPolicy(self):
-        """Normalize the policy into a probability"""
-        p = np.copy(self.policy)
-        if(p.min() < 0):
-            p = p + (-1*p.min())
-        return p/p.sum()
-
     def act(self, state):
         # pick an action according to the reward function defined by our vector.
         if self.off_policy:
             self.lastAction = np.random.choice(self.action_vector, p=self.random_policy)
         else: # must be on policy...
-            self.lastAction = np.random.choice(self.action_vector, p=self.getNormalizedPolicy())
+            self.lastAction = np.random.choice(self.action_vector, p=softmax(self.policy))
 
         return self.lastAction
 
