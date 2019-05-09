@@ -31,5 +31,6 @@ All of the games are run from main.py.  To run a game pass the appropriate name 
   <tr><th>Argument</th><th>Type</th><th>Description</th></tr>
   <tr><td>-v, --verbose</td><td>bool</td><td>Enables verbose printing while simulation.  This degrades performance considerably.</td>
   <tr><td>-i, --iterations</td><td>int</td><td>Sets the number of steps to run the simulation or the number of episodes to run if the game is episodic.</td></tr>
-  <tr><td>--off-policy</td><td>bool</td><td>If set to true will run all agents with a balanced random policy.</td>
+  <tr><td>--off-policy</td><td>bool</td><td>If set to true will run all agents with a balanced random policy.</td></tr>
+  <tr><td>-l, --learn-rate</td><td>float</td><td>Set the learning rate used in policy optimization.</td></tr>
 </table>
