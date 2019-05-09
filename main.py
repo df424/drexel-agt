@@ -10,7 +10,9 @@ from scipy.special import softmax
 
 def _getInitialPolicy(n_actions, args):
     if(args.random_start):
+        print(np.random.rand(n_actions)*abs(args.random_start_max-args.random_start_min)+args.random_start_min)
         return np.random.rand(n_actions)*abs(args.random_start_max-args.random_start_min)-args.random_start_min
+
     return np.zeros(n_actions) 
 
 def rock_paper_scissors(args):
