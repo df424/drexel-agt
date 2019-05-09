@@ -36,5 +36,5 @@ All of the games are run from main.py.  To run a game pass the appropriate name 
   <tr><td>-l, --learn-rate</td><td>float</td><td>0.01</td><td>Set the learning rate used in policy optimization.</td></tr>
   <tr><td>--random-start</td><td>bool</td><td>false</td><td>Randomly initialize policies between the parameters given by --rs-max and --rs-min</td></tr>
   <tr><td>--rs-max</td><td>float</td><td>1.0</td><td>Upper bound to use during random initialization.</td></tr>
-  <tr><td>--rs-max</td><td>float</td><td>-1.0</td><td>Lower bound to use during random initialization.</td></tr>
+  <tr><td>--rs-min</td><td>float</td><td>-1.0</td><td>Lower bound to use during random initialization.</td></tr>
 </table>
