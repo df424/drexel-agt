@@ -18,29 +18,32 @@ PAYOUT_MATRIX = np.array([[0, -1,  1],
 class RPSAgent(object):
     def __init__(self, optimizer, policy=None):
         # if we weren't given an initial policy generate one randomly
-        if not self.policy:
+        if policy is None:
             self.policy = np.random.rand(3)
+        else:
+            self.policy = policy
 
         self.optimizer = optimizer
         self.lastAction = None
     
     def getNormalizedPolicy(self):
         """Normalize the policy into a probability"""
-        p = self.policy()
+        p = np.copy(self.policy)
         if(p.min() < 0):
-            p = p + p.min()
+            p = p + (-1*p.min())
         return p/p.sum()
 
     def act(self, state):
         # pick an action according to the reward function defined by our vector.
-        return np.random.choice([0, 1, 2], p=self.getNormalizedPolicy())
+        self.lastAction = np.random.choice([0, 1, 2], p=self.getNormalizedPolicy())
+        return self.lastAction
 
     def update(self, reward, state):
         # update the policy using the optmizer iff we actual took an action last update.
         if not self.lastAction:
             return
 
-        self.policy = self.optimizer(self.policy, self.lastAction, reward, state)
+        self.policy = self.optimizer.optimize(self.policy, self.lastAction, reward, state)
 
 class RPSGame(object):
     def __init__(self, agents):
@@ -51,5 +54,9 @@ class RPSGame(object):
         a1 = self.agents[0].act(None)
         a2 = self.agents[1].act(None)
 
-        self.agents[0].update(PAYOUT_MATRIX[a1, a2], None)
-        self.agents[1].update(PAYOUT_MATRIX[a2, a1], None)
+        r1 = PAYOUT_MATRIX[a1, a2]
+        r2 = PAYOUT_MATRIX[a2, a1]
+        self.agents[0].update(r1, None)
+        self.agents[1].update(r2, None)
+
+        return ([a1, a2], [r1, r2])
