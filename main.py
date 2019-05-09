@@ -8,9 +8,14 @@ import matplotlib.pyplot as plt
 from optimizers import PolcyIncrementOptimizer
 from scipy.special import softmax
 
+def _getInitialPolicy(n_actions, args):
+    if(args.random_start):
+        return np.random.rand(n_actions)*abs(args.random_start_max-args.random_start_min)-args.random_start_min
+    return np.zeros(n_actions) 
+
 def rock_paper_scissors(args):
-    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(3)*2-1)
-    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(3)*2-1)
+    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(3, args))
+    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(3, args))
     game = stpg.EpisodicGame([agent1, agent2], rps.PAYOUT_MATRIX)
 
     policy_plots = np.zeros((args.n_iterations,6))
@@ -31,8 +36,8 @@ def rock_paper_scissors(args):
     plt.show()
 
 def prisoners_dilema(args):
-    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(2)*2-1)
-    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(2)*2-1)
+    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(2, args))
+    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(2, args))
     game = stpg.EpisodicGame([agent1, agent2], pris.PAYOUT_MATRIX)
 
     policy_plots = np.zeros((args.n_iterations,4))
@@ -61,6 +66,9 @@ if __name__ == '__main__':
     parser.add_argument('--off-policy', dest='off_policy', action='store_true')
     parser.add_argument('-l', '--learn-rate', dest='learning_rate', type=float, default=0.01)
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true')
+    parser.add_argument('--random-start', dest='random_start', action='store_true')
+    parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float)
+    parser.add_argument('--rs-min', dest='random_start_min', default=-1.0, type=float)
     args = parser.parse_args()
 
     # get the game to run.
