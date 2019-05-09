@@ -2,13 +2,14 @@
 import argparse
 import rps as rps
 import numpy as np
+import simple_two_player as stpg
 import matplotlib.pyplot as plt
 from optimizers import PolcyIncrementOptimizer
 
 def rock_paper_scissors(args):
-    agent1 = rps.RPSAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy)
-    agent2 = rps.RPSAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy)
-    game = rps.RPSGame([agent1, agent2])
+    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(3)*2-1)
+    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, np.random.rand(3)*2-1)
+    game = stpg.EpisodicGame([agent1, agent2], rps.PAYOUT_MATRIX)
 
     policy_plots = np.zeros((args.n_iterations,6))
 
