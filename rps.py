@@ -16,13 +16,14 @@ PAYOUT_MATRIX = np.array([[0, -1,  1],
 
 # Rock-paper-scissors game and agent implementation
 class RPSAgent(object):
-    def __init__(self, optimizer, policy=None):
+    def __init__(self, optimizer, off_policy, policy=None):
         # if we weren't given an initial policy generate one randomly
         if policy is None:
-            self.policy = np.random.rand(3)
+            self.policy = np.random.rand(3)*2-1
         else:
             self.policy = policy
 
+        self.off_policy = off_policy
         self.optimizer = optimizer
         self.lastAction = None
     
@@ -35,15 +36,19 @@ class RPSAgent(object):
 
     def act(self, state):
         # pick an action according to the reward function defined by our vector.
-        self.lastAction = np.random.choice([0, 1, 2], p=self.getNormalizedPolicy())
+        if self.off_policy:
+            self.lastAction = np.random.choice([0,1,2], p=np.array([1/3, 1/3, 1/3]))
+        else: # must be on policy...
+            self.lastAction = np.random.choice([0, 1, 2], p=self.getNormalizedPolicy())
+
         return self.lastAction
 
     def update(self, reward, state):
         # update the policy using the optmizer iff we actual took an action last update.
-        if not self.lastAction:
+        if self.lastAction is None:
             return
 
-        self.policy = self.optimizer.optimize(self.policy, self.lastAction, reward, state)
+        self.optimizer.optimize(self.policy, self.lastAction, reward, state)
 
 class RPSGame(object):
     def __init__(self, agents):

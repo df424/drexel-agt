@@ -4,5 +4,4 @@ class PolcyIncrementOptimizer(object):
         self.learning_rate = learning_rate
 
     def optimize(self, policy, last_action, reward, state):
-        policy[last_action] = policy[last_action] + reward * self.learning_rate
-        return policy
+        policy[last_action] = policy[last_action] + self.learning_rate * (reward - policy[last_action])
