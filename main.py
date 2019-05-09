@@ -62,13 +62,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Play multiagent games")
     parser.add_argument('game', default='rps', choices=COMMAND_MAP.keys(), help="You must pass one of the following games to run: " + str(COMMAND_MAP.keys()))
-    parser.add_argument('-i', '--iterations', dest='n_iterations', type=int, default=1000)
-    parser.add_argument('--off-policy', dest='off_policy', action='store_true')
-    parser.add_argument('-l', '--learn-rate', dest='learning_rate', type=float, default=0.01)
-    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true')
-    parser.add_argument('--random-start', dest='random_start', action='store_true')
-    parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float)
-    parser.add_argument('--rs-min', dest='random_start_min', default=-1.0, type=float)
+    parser.add_argument('-i', '--iterations', dest='n_iterations', type=int, default=1000, help='Sets the number of steps to run the simulation or the number of episodes to run if the game is episodic.')
+    parser.add_argument('--off-policy', dest='off_policy', action='store_true', help='If set to true will run all agents with a balanced random policy.')
+    parser.add_argument('-l', '--learn-rate', dest='learning_rate', type=float, default=0.01, help='Set the learning rate used in policy optimization.')
+    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Enables verbose printing while simulation. This degrades performance considerably.')
+    parser.add_argument('--random-start', dest='random_start', action='store_true', help='Randomly initialize policies between the parameters given by --rs-max and --rs-min')
+    parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float, help='Upper bound to use during random initialization.')
+    parser.add_argument('--rs-min', dest='random_start_min', default=-1.0, type=float, help='Lower bound to use during random initialization.')
     args = parser.parse_args()
 
     # get the game to run.
