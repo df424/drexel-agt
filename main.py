@@ -59,8 +59,8 @@ def prisoners_dilema(args):
         if(args.verbose):
             print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
-        policy_plots[i,0:2] = softmax(agent1.policy)
-        policy_plots[i,2:4] = softmax(agent2.policy)
+        policy_plots[i,0:2] = agent1.policy/agent1.policy.sum()
+        policy_plots[i,2:4] = agent2.policy/agent2.policy.sum()
 
     plt.plot(policy_plots[:]) 
     plt.legend(['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'])
