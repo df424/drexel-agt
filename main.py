@@ -5,7 +5,7 @@ import prisoner as pris
 import numpy as np
 import simple_two_player as stpg
 import matplotlib.pyplot as plt
-from optimizers import PolcyIncrementOptimizer
+from optimizers import PolcyIncrementOptimizer, MultiplicitiveWeightOptimizer
 from scipy.special import softmax
 
 def _getInitialPolicy(n_actions, args):
@@ -14,9 +14,17 @@ def _getInitialPolicy(n_actions, args):
 
     return np.zeros(n_actions) 
 
+def _getOptimizer(args):
+    if args.optimizer == 'multi-w':
+        return MultiplicitiveWeightOptimizer(args.learning_rate)
+    elif args.optimizer == 'policy-inc':
+        return PolcyIncrementOptimizer(args.learning_rate)
+
+    return None
+
 def rock_paper_scissors(args):
-    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(3, args))
-    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(3, args))
+    agent1 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(3, args))
+    agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(3, args))
     game = stpg.EpisodicGame([agent1, agent2], rps.PAYOUT_MATRIX)
 
     policy_plots = np.zeros((args.n_iterations,6))
@@ -37,8 +45,8 @@ def rock_paper_scissors(args):
     plt.show()
 
 def prisoners_dilema(args):
-    agent1 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(2, args))
-    agent2 = stpg.VectorPolicyAgent(PolcyIncrementOptimizer(args.learning_rate), args.off_policy, _getInitialPolicy(2, args))
+    agent1 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(2, args))
+    agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(2, args))
     game = stpg.EpisodicGame([agent1, agent2], pris.PAYOUT_MATRIX)
 
     policy_plots = np.zeros((args.n_iterations,4))
@@ -70,6 +78,7 @@ if __name__ == '__main__':
     parser.add_argument('--random-start', dest='random_start', action='store_true', help='Randomly initialize policies between the parameters given by --rs-max and --rs-min')
     parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float, help='Upper bound to use during random initialization.')
     parser.add_argument('--rs-min', dest='random_start_min', default=-1.0, type=float, help='Lower bound to use during random initialization.')
+    parser.add_argument('--optimizer', dest='optimizer', choices=['policy-inc', 'multi-w'], default='multi-w')
     args = parser.parse_args()
 
     # get the game to run.

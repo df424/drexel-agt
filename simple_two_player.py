@@ -21,7 +21,8 @@ class VectorPolicyAgent(object):
         if self.off_policy:
             self.lastAction = np.random.choice(self.action_vector, p=self.random_policy)
         else: # must be on policy...
-            self.lastAction = np.random.choice(self.action_vector, p=softmax(self.policy))
+            #self.lastAction = np.random.choice(self.action_vector, p=softmax(self.policy))
+            self.lastAction = np.random.choice(self.action_vector, p=self.policy/self.policy.sum())
 
         return self.lastAction
 
@@ -30,7 +31,7 @@ class VectorPolicyAgent(object):
         if self.lastAction is None:
             return
 
-        self.optimizer.optimize(self.policy, self.lastAction, reward, state)
+        self.policy = self.optimizer.optimize(self.policy, self.lastAction, reward, state)
 
 class EpisodicGame(object):
     def __init__(self, agents, payout_matrix):
@@ -42,8 +43,14 @@ class EpisodicGame(object):
         a1 = self.agents[0].act(None)
         a2 = self.agents[1].act(None)
 
-        r1 = self.payout_matrix[a1, a2]
-        r2 = self.payout_matrix[a2, a1]
+        # generate a vector of rewards.
+        r1 = np.zeros(len(self.agents[0].policy))
+        r2 = np.zeros(len(self.agents[1].policy))
+
+        for i in range(len(r1)):
+            r1[i] = self.payout_matrix[i, a2]
+            r2[i] = self.payout_matrix[i, a1]
+
         self.agents[0].update(r1, None)
         self.agents[1].update(r2, None)
 

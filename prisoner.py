@@ -8,5 +8,5 @@ DEFECT = 1
 #COOPERATE  -1          -10
 #DEFECT      0          -4
 
-PAYOUT_MATRIX = np.array([[-1, -10],
-                          [0,  -4]])
+PAYOUT_MATRIX = np.array([[-0.1, -1.0],
+                          [0,  -0.4]])
