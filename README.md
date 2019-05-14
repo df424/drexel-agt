@@ -26,7 +26,8 @@ All of the games are run from main.py.  To run a game pass the appropriate name 
   <tr><td>Prisoner's Dilemma</td><td>prisoner</td></tr>
 </table>
 <h4>Example Command</h4>
-<code>python .\main.py rps -i 10000 --random-start --rs-min 0 -N 50</code>
+<code>python .\main.py rps -i 10000 --random-start --rs-min 0 -N 50</code><br>
+<p><b>NOTE: When using the multiplicitive weights (multi-w) optimizer the policy must be initialized with weights greater than 0 so set --rs-min to 0 or higher.</b></p>
 <h2>Command Line Arguments</h2>
 <table>
   <tr><th>Argument</th><th>Type</th><th>Default</th><th>Description</th></tr>
