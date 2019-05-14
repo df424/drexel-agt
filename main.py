@@ -22,12 +22,21 @@ def _getOptimizer(args):
 
     return None
 
+def plotPolicyOverTime(policy_history, legend):
+    plt.plot(policy_history[:])   
+    plt.title('Policy vs. Iterations')
+    plt.xlabel('Iterations')
+    plt.ylabel('Normalized Policy')
+    plt.legend(legend)
+    plt.show()
+
+
 def rock_paper_scissors(args):
     agent1 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(3, args))
     agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(3, args))
     game = stpg.EpisodicGame([agent1, agent2], rps.PAYOUT_MATRIX)
 
-    policy_plots = np.zeros((args.n_iterations,6))
+    history = np.zeros((args.n_iterations,6))
 
     for i in range(args.n_iterations):
         #update the game
@@ -37,19 +46,17 @@ def rock_paper_scissors(args):
         if(args.verbose):
             print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
-        policy_plots[i,0:3] = softmax(agent1.policy)
-        policy_plots[i,3:6] = softmax(agent2.policy)
+        history[i,0:3] = softmax(agent1.policy)
+        history[i,3:6] = softmax(agent2.policy)
 
-    plt.plot(policy_plots[:]) 
-    plt.legend(['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors'])
-    plt.show()
+    plotPolicyOverTime(history[:,0:6], ['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors'])    
 
 def prisoners_dilema(args):
     agent1 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(2, args))
     agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, _getInitialPolicy(2, args))
     game = stpg.EpisodicGame([agent1, agent2], pris.PAYOUT_MATRIX)
 
-    policy_plots = np.zeros((args.n_iterations,4))
+    history = np.zeros((args.n_iterations,4))
 
     for i in range(args.n_iterations):
         #update the game
@@ -59,12 +66,10 @@ def prisoners_dilema(args):
         if(args.verbose):
             print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
-        policy_plots[i,0:2] = agent1.policy/agent1.policy.sum()
-        policy_plots[i,2:4] = agent2.policy/agent2.policy.sum()
+        history[i,0:2] = agent1.policy/agent1.policy.sum()
+        history[i,2:4] = agent2.policy/agent2.policy.sum()
 
-    plt.plot(policy_plots[:]) 
-    plt.legend(['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'])
-    plt.show()
+    plotPolicyOverTime(history[:,0:4], ['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'])
 
 if __name__ == '__main__':
     COMMAND_MAP = {'rps':rock_paper_scissors, 'prisoner':prisoners_dilema}
