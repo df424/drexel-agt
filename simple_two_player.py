@@ -3,11 +3,12 @@ from scipy.special import softmax
 
 # Rock-paper-scissors game and agent implementation
 class VectorPolicyAgent(object):
-    def __init__(self, optimizer, off_policy, policy):
+    def __init__(self, optimizer, off_policy, policy, use_softmax):
         self.policy = policy
         self.off_policy = off_policy
         self.optimizer = optimizer
         self.lastAction = None
+        self.use_softmax = use_softmax
 
         # generate the action vector.
         self.action_vector = np.arange(len(self.policy))
@@ -20,8 +21,9 @@ class VectorPolicyAgent(object):
         # pick an action according to the reward function defined by our vector.
         if self.off_policy:
             self.lastAction = np.random.choice(self.action_vector, p=self.random_policy)
-        else: # must be on policy...
-            #self.lastAction = np.random.choice(self.action_vector, p=softmax(self.policy))
+        elif self.use_softmax: 
+            self.lastAction = np.random.choice(self.action_vector, p=softmax(self.policy))
+        else:
             self.lastAction = np.random.choice(self.action_vector, p=self.policy/self.policy.sum())
 
         return self.lastAction

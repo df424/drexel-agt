@@ -4,7 +4,7 @@ class PolcyIncrementOptimizer(object):
         self.learning_rate = learning_rate
 
     def optimize(self, policy, last_action, reward, state):
-        return policy[last_action] + self.learning_rate * (reward[last_action] - policy[last_action])
+        return policy + self.learning_rate * (reward - policy)
 
 class MultiplicitiveWeightOptimizer(object):
     def __init__(self, learning_rate):
