@@ -18,7 +18,7 @@ def _getInitialPolicy(n_actions, args):
 def _getOptimizer(args):
     if args.optimizer == 'multi-w':
         return MultiplicitiveWeightOptimizer(args.learning_rate)
-    elif args.optimizer == 'policy-inc':
+    elif args.optimizer == 'td':
         return PolcyIncrementOptimizer(args.learning_rate)
 
     return None
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     parser.add_argument('--random-start', dest='random_start', action='store_true', help='Randomly initialize policies between the parameters given by --rs-max and --rs-min')
     parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float, help='Upper bound to use during random initialization.')
     parser.add_argument('--rs-min', dest='random_start_min', default=-1.0, type=float, help='Lower bound to use during random initialization.')
-    parser.add_argument('--optimizer', dest='optimizer', choices=['policy-inc', 'multi-w'], default='multi-w')
+    parser.add_argument('--optimizer', dest='optimizer', choices=['td', 'multi-w'], default='multi-w')
     parser.add_argument('-N', dest='N', default=1, type=int, help='Average data over N runs of the simulation.')
     parser.add_argument('--use-softmax', dest='use_softmax', action='store_true', help='Setting this to true will cause the agent\'s to use softmax for action selection.')
     args = parser.parse_args()
