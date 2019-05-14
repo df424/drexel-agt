@@ -32,9 +32,12 @@ All of the games are run from main.py.  To run a game pass the appropriate name 
   <tr><th>Argument</th><th>Type</th><th>Default</th><th>Description</th></tr>
   <tr><td>-v, --verbose</td><td>bool</td><td>false</td><td>Enables verbose printing while simulation.  This degrades performance considerably.</td>
   <tr><td>-i, --iterations</td><td>int</td><td>1000</td><td>Sets the number of steps to run the simulation or the number of episodes to run if the game is episodic.</td></tr>
+  <tr><td>-N</td><td>int</td><td>1</td><td>Average data over N runs of the simulation.</td></tr>
   <tr><td>--off-policy</td><td>bool</td><td>false</td><td>If set to true will run all agents with a balanced random policy.</td></tr>
   <tr><td>-l, --learn-rate</td><td>float</td><td>0.01</td><td>Set the learning rate used in policy optimization.</td></tr>
   <tr><td>--random-start</td><td>bool</td><td>false</td><td>Randomly initialize policies between the parameters given by --rs-max and --rs-min</td></tr>
   <tr><td>--rs-max</td><td>float</td><td>1.0</td><td>Upper bound to use during random initialization.</td></tr>
   <tr><td>--rs-min</td><td>float</td><td>-1.0</td><td>Lower bound to use during random initialization.</td></tr>
+  <tr><td>--optimizer</td><td>string</td><td>multi-w</td><td>Select the type of optimizer to use when updating policies. Options right now are 'multi-w' for multiplicitive weights and 'td' for temporal difference.</td></tr>
+  <tr><td>--use-softmax</td><td>bool</td><td>false</td><td>Setting this to true will cause the agent\'s to use softmax for action selection.</td></tr>
 </table>
