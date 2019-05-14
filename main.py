@@ -24,14 +24,36 @@ def _getOptimizer(args):
     return None
 
 def plotPolicyOverTime(axis, policy_history, legend, args):
-    axis.plot(policy_history[:])   
+    indices = np.arange(0, args.n_iterations)
+    # compute the average policy across runs...
+    averaged_samples = policy_history.mean(axis=0)
+
+    # for each agent and each action that it could take...
+    for i in range(policy_history.shape[2]):
+        # plot the data as error bars.
+        axis.errorbar(indices, y=averaged_samples[:,i], yerr=policy_history.std(axis=0)[:,i], errorevery=args.n_iterations/50)
+
+    # format the graph.
     axis.set_title('Policy vs. Iterations, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
     axis.set_xlabel('Iterations')
     axis.set_ylabel('Normalized Policy')
     axis.legend(legend)
 
 def plotTimeAveragedPolicy(axis, policy_history, legend, args):
-    axis.plot(np.cumsum(policy_history, axis=0)/np.arange(1,len(policy_history)+1).reshape((len(policy_history),1)))
+    indices = np.arange(0, args.n_iterations)
+    # compute the cumulative sums for the policies for each iteration.
+    cumulative_sums = np.cumsum(policy_history, axis=1)
+    # make them time averaged..
+    time_averaged_sums = cumulative_sums/(indices+1).reshape(args.n_iterations,1)
+    # calculate the standard deviation across runs.
+    std = time_averaged_sums.std(axis=0)
+
+    # for each agent and each action that it could take...
+    for i in range(policy_history.shape[2]):
+        # plot the data as error bars.
+        axis.errorbar(indices, y=time_averaged_sums.mean(axis=0)[:,i], yerr=std[:,i], errorevery=args.n_iterations/50)
+
+    # format the graph.
     axis.set_title('Time Averaged Policies, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
     axis.set_xlabel('Iterations')
     axis.set_ylabel('Time Averaged Policy')
@@ -45,7 +67,7 @@ def rock_paper_scissors(args):
     agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, inital_policy2, args.use_softmax)
     game = stpg.EpisodicGame([agent1, agent2], rps.PAYOUT_MATRIX)
 
-    history = np.zeros((args.n_iterations,6))
+    history = np.zeros((args.N, args.n_iterations,6))
     for n in range(args.N):
         print(str(round(n*100.0/args.N)) + '%...')
         # Reset the agents initial policy...
@@ -60,15 +82,15 @@ def rock_paper_scissors(args):
                 print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
             if(args.use_softmax):
-                history[i,0:3] = history[i,0:3] + softmax(agent1.policy)
-                history[i,3:6] = history[i,3:6] + softmax(agent2.policy)
+                history[n, i,0:3] = softmax(agent1.policy)
+                history[n, i,3:6] = softmax(agent2.policy)
             else:
-                history[i,0:3] = history[i,0:3] + agent1.policy/agent1.policy.sum()
-                history[i,3:6] = history[i,3:6] + agent2.policy/agent2.policy.sum()
+                history[n, i,0:3] = agent1.policy/agent1.policy.sum()
+                history[n, i,3:6] = agent2.policy/agent2.policy.sum()
 
     f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    plotPolicyOverTime(ax1, history[:,0:6]/args.N, rps.POLICY_LEGEND, args)    
-    plotTimeAveragedPolicy(ax2, history[:,0:6]/args.N, rps.POLICY_LEGEND, args)
+    plotPolicyOverTime(ax1, history[:,:,0:6], rps.POLICY_LEGEND, args)    
+    plotTimeAveragedPolicy(ax2, history[:,:,0:6], rps.POLICY_LEGEND, args)
     plt.show()
 
 def prisoners_dilema(args):
@@ -78,7 +100,7 @@ def prisoners_dilema(args):
     agent2 = stpg.VectorPolicyAgent(_getOptimizer(args), args.off_policy, inital_policy2, args.use_softmax)
     game = stpg.EpisodicGame([agent1, agent2], pris.PAYOUT_MATRIX)
 
-    history = np.zeros((args.n_iterations,4))
+    history = np.zeros((args.N, args.n_iterations,4))
 
     for n in range(args.N):
         print(str(round(n*100.0/args.N)) + '%...')
@@ -94,15 +116,15 @@ def prisoners_dilema(args):
                 print(i, agent1.policy, softmax(agent1.policy), agent2.policy, softmax(agent2.policy), results)
 
             if(args.use_softmax):
-                history[i,0:2] = history[i,0:2] + softmax(agent1.policy)
-                history[i,2:4] = history[i,2:4] + softmax(agent2.policy)
+                history[n,i,0:2] = softmax(agent1.policy)
+                history[n,i,2:4] = softmax(agent2.policy)
             else:
-                history[i,0:2] = history[i,0:2] + agent1.policy/agent1.policy.sum()
-                history[i,2:4] = history[i,2:4] + agent2.policy/agent2.policy.sum()
+                history[n,i,0:2] = agent1.policy/agent1.policy.sum()
+                history[n,i,2:4] = agent2.policy/agent2.policy.sum()
 
     f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    plotPolicyOverTime(ax1, history[:,0:4]/args.N, pris.POLICY_LEGEND, args)
-    plotTimeAveragedPolicy(ax2, history[:,0:4]/args.N, pris.POLICY_LEGEND, args)
+    plotPolicyOverTime(ax1, history[:,:,0:4], pris.POLICY_LEGEND, args)
+    plotTimeAveragedPolicy(ax2, history[:,:,0:4], pris.POLICY_LEGEND, args)
     plt.show()
 
 
