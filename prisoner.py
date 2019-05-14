@@ -10,3 +10,5 @@ DEFECT = 1
 
 PAYOUT_MATRIX = np.array([[-0.1, -1.0],
                           [0,  -0.4]])
+
+POLICY_LEGEND = ['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect']

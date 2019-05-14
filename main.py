@@ -23,13 +23,20 @@ def _getOptimizer(args):
 
     return None
 
-def plotPolicyOverTime(policy_history, legend, args):
-    plt.plot(policy_history[:])   
-    plt.title('Policy vs. Iterations, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
-    plt.xlabel('Iterations')
-    plt.ylabel('Normalized Policy')
-    plt.legend(legend)
-    plt.show()
+def plotPolicyOverTime(axis, policy_history, legend, args):
+    axis.plot(policy_history[:])   
+    axis.set_title('Policy vs. Iterations, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
+    axis.set_xlabel('Iterations')
+    axis.set_ylabel('Normalized Policy')
+    axis.legend(legend)
+
+def plotTimeAveragedPolicy(axis, policy_history, legend, args):
+    axis.plot(np.cumsum(policy_history, axis=0)/np.arange(1,len(policy_history)+1).reshape((len(policy_history),1)))
+    axis.set_title('Time Averaged Policies, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
+    axis.set_xlabel('Iterations')
+    axis.set_ylabel('Time Averaged Policy')
+    axis.grid()
+    axis.legend(legend)
 
 def rock_paper_scissors(args):
     inital_policy1 = _getInitialPolicy(3, args)
@@ -59,7 +66,10 @@ def rock_paper_scissors(args):
                 history[i,0:3] = history[i,0:3] + agent1.policy/agent1.policy.sum()
                 history[i,3:6] = history[i,3:6] + agent2.policy/agent2.policy.sum()
 
-    plotPolicyOverTime(history[:,0:6]/args.N, ['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors'], args)    
+    f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
+    plotPolicyOverTime(ax1, history[:,0:6]/args.N, rps.POLICY_LEGEND, args)    
+    plotTimeAveragedPolicy(ax2, history[:,0:6]/args.N, rps.POLICY_LEGEND, args)
+    plt.show()
 
 def prisoners_dilema(args):
     inital_policy1 = _getInitialPolicy(2, args)
@@ -90,7 +100,10 @@ def prisoners_dilema(args):
                 history[i,0:2] = history[i,0:2] + agent1.policy/agent1.policy.sum()
                 history[i,2:4] = history[i,2:4] + agent2.policy/agent2.policy.sum()
 
-    plotPolicyOverTime(history[:,0:4]/args.N, ['agent1 cooperate', 'agent1 defect', 'agent1 cooperate', 'agent2 defect'], args)
+    f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
+    plotPolicyOverTime(ax1, history[:,0:4]/args.N, pris.POLICY_LEGEND, args)
+    plotTimeAveragedPolicy(ax2, history[:,0:4]/args.N, pris.POLICY_LEGEND, args)
+    plt.show()
 
 
 if __name__ == '__main__':

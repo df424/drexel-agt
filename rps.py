@@ -13,3 +13,5 @@ SCISSORS = 2
 PAYOUT_MATRIX = np.array([[0, -1,  1],
                           [1,  0, -1],
                           [-1, 1,  0]])
+
+POLICY_LEGEND =  ['agent1 rock', 'agent1 paper', 'agent1 scissors', 'agent2 rock', 'agent2 paper', 'agent2 scissors']
