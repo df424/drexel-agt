@@ -52,7 +52,7 @@ def parse_args():
     parser.add_argument('--off-policy', dest='off_policy', action='store_true', help='If set to true will run all agents with a balanced random policy.')
     parser.add_argument('-l', '--learn-rate', dest='learning_rate', type=float, default=0.01, help='Set the learning rate used in policy optimization.')
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Enables verbose printing while simulation. This degrades performance considerably.')
-    parser.add_argument('--random-start', dest='random_start', action='store_true', help='Randomly initialize policies between the parameters given by --rs-max and --rs-min')
+    parser.add_argument('--random-start', dest='random_start', action='store_false', help='Randomly initialize policies between the parameters given by --rs-max and --rs-min')
     parser.add_argument('--rs-max', dest='random_start_max', default=1.0, type=float, help='Upper bound to use during random initialization.')
     parser.add_argument('--rs-min', dest='random_start_min', default=0, type=float, help='Lower bound to use during random initialization.')
     parser.add_argument('--optimizer', dest='optimizer', choices=['td', 'multi-w'], default='multi-w')

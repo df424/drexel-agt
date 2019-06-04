@@ -6,10 +6,8 @@ def initiallzePolicy(n_actions, args):
     if(args.random_start):
         ran = np.random.rand(n_actions)
         range = abs(args.random_start_max - args.random_start_min) + args.random_start_min
-        logging.debug(ran, range)
         return ran*range
-
-    return np.zeros(n_actions) 
+    return np.ones(n_actions)
 
 def initializeOptimizer(args):
     if args.optimizer == 'multi-w':
