@@ -2,19 +2,19 @@ from game import Game
 import engine
 import numpy as np
 
-COOPERATE = 0
-DEFECT = 1
+TURN = 0
+STAY = 1
+#          them
+# me    TURN   STAY
+#TURN     0     -2
+#STAY     2     -10
 
-#           COOPERATE   DEFECT
-#COOPERATE  -1          -10
-#DEFECT      0          -4
+PAYOUT_MATRIX = np.array([[0, -.2],
+                          [.2,  -1.0]])
 
-PAYOUT_MATRIX = np.array([[-0.1, -1.0],
-                          [0,  -0.4]])
+POLICY_LEGEND = ['agent1 turn', 'agent1 stay', 'agent2 turn', 'agent2 stay']
 
-POLICY_LEGEND = ['agent1 cooperate', 'agent1 defect', 'agent2 cooperate', 'agent2 defect']
-
-class Prisoner(Game):
+class Chicken(Game):
     def __init__(self, args, num_actors=2, num_actions=2):
         Game.__init__(self, args, num_actors, num_actions)
         self.payout_matrix = PAYOUT_MATRIX
