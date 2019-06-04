@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import utility as util
 import matplotlib.pyplot as plt
+from scipy.special import softmax
 from plot import *
 
 class Game:
@@ -30,8 +31,8 @@ class Game:
     def initHistory(self, N, iters):
         self.history = np.zeros((N, iters, (self.num_actions*self.num_actors)))
 
-    def updateHistory(self, n, iter, softmax=False):
-        if(softmax):
+    def updateHistory(self, n, iter, use_softmax=False):
+        if(use_softmax):
             for i in range(self.num_actors):
                 self.history[n, iter , (i*self.num_actions):((i+1)*self.num_actions)] = \
                     softmax(self.actors[i].policy)

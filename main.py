@@ -4,8 +4,6 @@ import logging
 import numpy as np
 import matplotlib.pyplot as plt
 from optimizers import PolcyIncrementOptimizer, MultiplicitiveWeightOptimizer
-from scipy.special import softmax
-
 from rps import RPS
 from chicken import Chicken
 from prisoner import Prisoner
