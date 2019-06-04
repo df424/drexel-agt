@@ -1,9 +1,13 @@
 import numpy as np
+import logging
 from optimizers import PolcyIncrementOptimizer, MultiplicitiveWeightOptimizer
 
 def initiallzePolicy(n_actions, args):
     if(args.random_start):
-        return np.random.rand(n_actions)*abs(args.random_start_max - args.random_start_min) + args.random_start_min
+        ran = np.random.rand(n_actions)
+        range = abs(args.random_start_max - args.random_start_min) + args.random_start_min
+        logging.debug(ran, range)
+        return ran*range
 
     return np.zeros(n_actions) 
 
