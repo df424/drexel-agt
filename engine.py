@@ -21,4 +21,4 @@ class EpisodicGame(object):
         self.agents[0].update(r1, None)
         self.agents[1].update(r2, None)
 
-        return ([a1, a2], [r1, r2])
+        return np.concatenate(([a1], [a2], r1, r2))

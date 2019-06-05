@@ -31,7 +31,7 @@ def main():
         for i in range(args.n_iterations):
             # update the game
             results = game.update()
-            game.updateHistory(n, i, args.use_softmax)
+            game.updateHistory(n, i, results, args.use_softmax)
 
             # print if verbosity is on.
             # if(args.verbose):

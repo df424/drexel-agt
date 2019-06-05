@@ -29,9 +29,10 @@ class Game:
         self.history = None
 
     def initHistory(self, N, iters):
-        self.history = np.zeros((N, iters, (self.num_actions*self.num_actors)))
+        # Need space for each action for each agent, plus a reward vector for each agent and an action taken for each agent.
+        self.history = np.zeros((N, iters, (2*self.num_actions*self.num_actors+self.num_actions)))
 
-    def updateHistory(self, n, iter, use_softmax=False):
+    def updateHistory(self, n, iter, results, use_softmax=False):
         if(use_softmax):
             for i in range(self.num_actors):
                 self.history[n, iter , (i*self.num_actions):((i+1)*self.num_actions)] = \
@@ -40,6 +41,8 @@ class Game:
             for i in range(self.num_actors):
                 self.history[n, iter , (i*self.num_actions):((i+1)*self.num_actions)] = \
                     self.actors[i].policy/self.actors[i].policy.sum()
+
+        self.history[n, iter, -len(results):] = results
         
     
     def update(self):
