@@ -37,3 +37,13 @@ def plotTimeAveragedPolicy(axis, policy_history, legend, args):
     axis.set_ylabel('Time Averaged Policy')
     axis.grid()
     axis.legend(legend)
+
+def plotRegret(axis, history, n_agents, n_actions, legend, args):
+    # skip policies, and then actions to get rewards.
+    a1_reward_offset = n_agents * n_actions + n_agents
+    a2_reward_offset = (1 + n_agents) * n_actions + n_agents
+    a1_rewards = history[:, :, a1_reward_offset:a1_reward_offset + n_actions]
+    a2_rewards = history[:, :, a2_reward_offset:a2_reward_offset + n_actions]
+    print(a1_rewards.shape, a2_rewards.shape)
+    print(a1_rewards[0].sum(axis=0), a2_rewards[0].sum(axis=0))
+    #a1_best_action = history[:,:,n_agents*n_actions]
