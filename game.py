@@ -7,6 +7,24 @@ import matplotlib.pyplot as plt
 from scipy.special import softmax
 from plot import *
 
+class GameHistory:
+    def __init__(self, num_samples, num_iterations, num_actors, num_actions):
+        self._historys = []
+
+        for _ in range(num_actors):
+            self._historys.append({
+                'policy':np.zeros((num_samples, num_iterations, num_actions)),
+                'rewards':np.zeros((num_samples, num_iterations, num_actions)),
+                'actions':np.zeros((num_samples, num_iterations))
+            })
+    
+    def __getitem__(self, key):
+        return self._historys[key]
+
+    def __len__(self):
+        return len(self._historys)
+            
+
 class Game:
     def __init__(self, args, num_actors, num_actions):
         self.num_actors = num_actors
@@ -29,21 +47,18 @@ class Game:
         self.history = None
 
     def initHistory(self, N, iters):
-        # Need space for each action for each agent, plus a reward vector for each agent and an action taken for each agent.
-        self.history = np.zeros((N, iters, (2*self.num_actions*self.num_actors+self.num_actions)))
+        # Allocate the history object.
+        self.history = GameHistory(N, iters, self.num_actors, self.num_actions)
 
-    def updateHistory(self, n, iter, results, use_softmax=False):
-        if(use_softmax):
-            for i in range(self.num_actors):
-                self.history[n, iter , (i*self.num_actions):((i+1)*self.num_actions)] = \
-                    softmax(self.actors[i].policy)
-        else:
-            for i in range(self.num_actors):
-                self.history[n, iter , (i*self.num_actions):((i+1)*self.num_actions)] = \
-                    self.actors[i].policy/self.actors[i].policy.sum()
+    def updateHistory(self, n, iter, actions, rewards, use_softmax=False):
+        for i in range(self.num_actors):
+            if(use_softmax):
+                self.history[i]['policy'][n, iter] = softmax(self.actors[i].policy)
+            else:
+                self.history[i]['policy'][n, iter] = self.actors[i].policy/self.actors[i].policy.sum()
 
-        self.history[n, iter, -len(results):] = results
-        
+            self.history[i]['actions'][n, iter] = actions[i]
+            self.history[i]['rewards'][n, iter] = rewards[i]
     
     def update(self):
         return self.gengine.update()
@@ -54,9 +69,8 @@ class Game:
     
     def display(self, args, nash=None):
         f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
-        plotPolicyOverTime(ax1, self.history[:,:,0:(self.num_actors*self.num_actions)], self.plot_legend, args)    
-        plotTimeAveragedPolicy(ax2, self.history[:,:,0:(self.num_actors*self.num_actions)], self.plot_legend, args)
-        plotRegret(None, self.history, len(self.actors), len(self.actors[0].policy), None, args)
+        plotPolicyOverTime(ax1, self.history, self.plot_legend, args)    
+        plotTimeAveragedPolicy(ax2, self.history, self.plot_legend, args)
         if nash:
             plt.hlines(nash, 0-(args.n_iterations/100), args.n_iterations+(args.n_iterations/100))
         plt.show()
