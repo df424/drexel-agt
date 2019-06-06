@@ -71,6 +71,7 @@ class Game:
         f,(ax1, ax2) = plt.subplots(2, 1, sharex=True)
         plotPolicyOverTime(ax1, self.history, self.plot_legend, args)    
         plotTimeAveragedPolicy(ax2, self.history, self.plot_legend, args)
+        plotRegret(None, self.history, None, args)
         if nash:
             plt.hlines(nash, 0-(args.n_iterations/100), args.n_iterations+(args.n_iterations/100))
         plt.show()
