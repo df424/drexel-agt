@@ -21,6 +21,7 @@ def plotPolicyOverTime(axis, history, legend, args):
     axis.set_xlabel('Iterations')
     axis.set_ylabel('Normalized Policy')
     axis.legend(legend)
+    axis.grid()
 
 def plotTimeAveragedPolicy(axis, history, legend, args):
     indices = np.arange(0, args.n_iterations)
@@ -79,8 +80,9 @@ def plotRegret(axis, history, legend, args):
         axis.set_title('External Regret, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
         axis.set_xlabel('Iterations')
         axis.set_ylabel('Regret')
-        axis.grid()
         axis.legend(legend)
+
+    axis.grid()
 
 def plotCrossProduct(axis, history, legend, args):
     assert(len(history) == 2)
@@ -98,3 +100,7 @@ def plotCrossProduct(axis, history, legend, args):
             products[n, i] = np.matmul(a1_policy[n,i].reshape(n_actions,-1), a2_policy[n,i].reshape(-1,n_actions)).reshape(n_actions**2)
 
     axis.plot(products.mean(axis=0))
+    axis.set_title('Product Distribution, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
+    axis.set_xlabel('Iterations')
+    axis.set_ylabel('Result Probability')
+    axis.grid()
