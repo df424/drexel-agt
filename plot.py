@@ -57,7 +57,6 @@ def plotRegret(axis, history, legend, args):
         action_history = history[i]['actions']
         reward_history = history[i]['rewards']
 
-        print(reward_history)
         # rewards is an N x i x |A| matrix summing over i for each N will give us all of the best fixed action sequences if we take the argmax...
         best_fixed_actions = np.argmax(reward_history.mean(axis=1), axis=1)
 
