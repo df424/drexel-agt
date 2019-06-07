@@ -57,20 +57,28 @@ def plotRegret(axis, history, legend, args):
         action_history = history[i]['actions']
         reward_history = history[i]['rewards']
 
-        print(action_history)
         print(reward_history)
-
         # rewards is an N x i x |A| matrix summing over i for each N will give us all of the best fixed action sequences if we take the argmax...
         best_fixed_actions = np.argmax(reward_history.mean(axis=1), axis=1)
 
         # now for each run we can cumulative sum over the best fixed action sequence which is the first term of our regret...
         best_fixed_sums = np.cumsum(reward_history[np.arange(len(reward_history)), :, best_fixed_actions], axis=1)
 
-        # compute the cumulative sum of the actual actions as well...
-        print(action_history)
-        print(reward_history.shape, best_fixed_actions)
-        print(reward_history[np.arange(len(reward_history)),np.arange(len(reward_history[0])),best_fixed_actions])
-        print(best_fixed_sums)
+        # get the actual rewards acheived based on action history. 
+        # todo figure out how to one line this in numpy.
+        real_rewards = np.zeros((len(reward_history), args.n_iterations))
+        for j in range(len(reward_history)):
+            real_rewards[j] = reward_history[j, np.arange(args.n_iterations), action_history[j].astype(int)]
 
-        import sys
-        sys.exit()
+        # get the cumulative sums for the real rewards...
+        real_reward_sums = np.cumsum(real_rewards, axis=1)
+
+        # calculate the regret.
+        regret = (best_fixed_sums - real_reward_sums)/np.arange(1,args.n_iterations+1)
+
+        axis.errorbar(np.arange(args.n_iterations), y=regret.mean(axis=0), yerr=np.std(regret, axis=0), errorevery=max(1,args.n_iterations/50))
+        axis.set_title('External Regret, λ=' + str(args.learning_rate) + ', N=' + str(args.N))
+        axis.set_xlabel('Iterations')
+        axis.set_ylabel('Regret')
+        axis.grid()
+        axis.legend(legend)
