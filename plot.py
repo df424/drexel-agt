@@ -81,3 +81,20 @@ def plotRegret(axis, history, legend, args):
         axis.set_ylabel('Regret')
         axis.grid()
         axis.legend(legend)
+
+def plotCrossProduct(axis, history, legend, args):
+    assert(len(history) == 2)
+
+    a1_policy = history[0]['policy']
+    a2_policy = history[1]['policy']
+    n_actions = len(a1_policy[0,0])
+
+    # allocate space for the products...
+    products = np.zeros((args.N, args.n_iterations, n_actions**2))
+
+    # not sure how to do this in numpy so just iterate over each N.
+    for n in range(args.N):
+        for i in range(args.n_iterations):
+            products[n, i] = np.matmul(a1_policy[n,i].reshape(n_actions,-1), a2_policy[n,i].reshape(-1,n_actions)).reshape(n_actions**2)
+
+    axis.plot(products.mean(axis=0))

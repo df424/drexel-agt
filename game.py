@@ -68,11 +68,11 @@ class Game:
             self.actors[i].policy = self.initial_policy[i]
     
     def display(self, args, nash=None):
-        f,(ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+        f,((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex=True)
         plotPolicyOverTime(ax1, self.history, self.plot_legend, args)    
         plotTimeAveragedPolicy(ax2, self.history, self.plot_legend, args)
         #if nash:
             #plt.hlines(nash, 0-(args.n_iterations/100), args.n_iterations+(args.n_iterations/100))
         plotRegret(ax3, self.history, ['A1', 'A2'], args)
+        plotCrossProduct(ax4, self.history, None, args)
         plt.show()
-
