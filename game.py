@@ -29,6 +29,8 @@ class Game:
     def __init__(self, args, num_actors, num_actions):
         self.num_actors = num_actors
         self.num_actions = num_actions
+        # cache args so we can reinitialize the policy.
+        self.args = args
         self.initial_policy = []
         for i in range(num_actors):
             self.initial_policy.append(util.initiallzePolicy(num_actions, args))
@@ -65,7 +67,8 @@ class Game:
     
     def reset(self):
         for i in range(self.num_actors):
-            self.actors[i].policy = self.initial_policy[i]
+            #self.actors[i].policy = self.initial_policy[i]
+            self.actors[i].policy = util.initiallzePolicy(self.num_actions, self.args)
     
     def display(self, args, nash=None):
         f,((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex=True)

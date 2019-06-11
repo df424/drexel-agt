@@ -19,10 +19,8 @@ def main():
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
     
-    # get the game to run.
-    game_name = COMMAND_MAP[args.game]
-    # run it.
-    game = game_name(args)
+    # Create the game...
+    game = COMMAND_MAP[args.game](args)
     game.initHistory(args.N, args.n_iterations)
     for n in range(args.N):
         print(str(round(n*100.0/args.N)) + '%...')
