@@ -24,6 +24,7 @@ All of the games are run from main.py.  To run a game pass the appropriate name 
   <tr><th>Game</th><th>Command Arg</th></tr>
   <tr><td>Rock-Paper-Scissors</td><td>rps</td></tr>
   <tr><td>Prisoner's Dilemma</td><td>prisoner</td></tr>
+  <tr><td>Chicken</td><td>chicken</td></tr>
 </table>
 <h4>Example Command</h4>
 <code>python .\main.py rps -i 10000 --random-start --rs-min 0 -N 50</code><br>
